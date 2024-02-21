@@ -1,0 +1,38 @@
+## Problem 1 : Longest Stable Subsequence
+
+Consider a list of numbers $[a_0, a_1, \cdots, a_{n-1}]$. Our goal is to find the the longest stable subsequence: $[a_{i_1}, a_{i_2}, \cdots, a_{i_k} ]$ which is a sub-list of the original list that selects elements at indices $i_1, i_2, \ldots, i_k$ from the original list such that 
+  1. $i_1 < i_2 < \cdots < i_k$; 
+  2. $a_{i_{j+1}} - 1 \leq a_{i_{j}} \leq a_{i_{j+1}} + 1 $. We can also write this as $|a_{i_{j+1}} - a_{i_j}| \leq 1$. I.e, each element of the subsequence must be within $\pm 1$ or equal to the previous element.
+  3. The length of the subsequence $k$ is maximized.
+
+### Example 
+
+Consider the list `[1, 4, 2, -2, 0, -1, 2, 3]`.  There are many "stable subsequences":
+ - `[1, 0, -1]`
+ - `[1, 2, 2, 3]`
+ - `[4, 3]`
+
+The longest stable subsequence is `[1, 2, 2, 3]` of length 4. Note that each element of the subsequence is at most $1$ away from the previous element.
+
+The goal of this problem is to formulate a dynamic programming solution to find the length of the longest stable subsequence and the subsequence itself.
+
+
+
+### A: Write a Recurrence With Base Case
+$$\newcommand\lss{\textsf{LSSLength}}$$
+Let $n$ be the length of the original array $[a_0, \ldots, a_{n-1}]$. Define $$\lss(\color{red}{i}, a_j)$$ to be the length of the longest stable subsequence for the subarray from $[a_{\color{red}{i}}, \ldots, a_{n-1}]$ (note that $a_{\color{red}{i}}$ is included) with the additional constraint that the  first element in the subsequence chosen (let us call it $a_{i_1}$) must satisfy $$| a_{i_1} - a_j |  \leq 1$$.
+
+
+__Notes__
+  0. $0 \leq i \leq n$. $i = n$ denotes the empty subarray.
+  1. $a_j$ represents a previous choice we have made before encountering the current subproblem. It is made an argument of the recurrence to ensure that the subsequent choice made from $[a_i, \ldots, a_{n-1}]$ satisfies $|a - a_j| \leq 1$.
+  2. We will use the special value $a_j = \textsf{None}$ to denote that no such element $a_j$ has been chosen.
+
+Fill out the missing portion of the recurrence and base cases. We will not grade your answer below. Instead please use it as a guide to complete the code for the recurrence and pass the test cases provided.
+
+
+$\lss(i, a_j) = \begin{cases}
+?? & i = n & \text{# Base Case when subarray is empty} \\
+\lss(i+1, a_j) & i < n\ \text{and}\ a_j \not= \text{None}\ \text{and}\ |a_i - a_j| > 1 & \text{# We cannot choose a[i], skip it and move right along}\\
+\max(??? + 1, ??? ) & i < n\ \text{and}\ \left( a_j = \text{None}\ \text{or}\ |a_i - a_j| \leq 1 \right) & \text{# Choose maximum of two options: take a[i]  or skip a[i]}\\
+\end{cases}$
